@@ -7,7 +7,7 @@
   <style>
     body {
       width: 300px;
-      min-height: 200px;
+      min-height: 400px;
       margin: 0;
       padding: 20px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -18,6 +18,59 @@
       justify-content: center;
       color: white;
       overflow: hidden;
+    }
+
+    .format-selector {
+      margin-top: 8px;
+      padding-top: 8px;
+    }
+
+    .format-selector select {
+      width: 48%;
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .format-selector select:hover {
+      border-color: #764ba2;
+    }
+
+    .format-selector select:focus {
+      outline: none;
+      border-color: #764ba2;
+      box-shadow: 0 0 0 2px rgba(118, 75, 162, 0.2);
+    }
+
+    /* 添加气泡框样式 */
+    .popup-menu {
+      position: absolute;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      display: none;
+      color: #333;
+      z-index: 1000;
+    }
+
+    .popup-menu button {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      margin: 4px 0;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #333;
+    }
+
+    .popup-menu button:hover {
+      background-color: #f0f0f0;
     }
 
     .container {
@@ -81,6 +134,23 @@
     <div>
       <button class="button" id="changeColor">更改背景色</button>
       <button class="button" id="Screenshot">截图</button>
+    </div>
+    <div class="format-selector">
+      <select id="imageFormat">
+        <option value="png">PNG</option>
+        <option value="jpeg">JPEG</option>
+        <option value="webp">WebP</option>
+      </select>
+      <select id="imgexportFormat">
+        <option value="base">base64</option>
+        <option value="jpeg">图片</option>
+      </select>
+    </div>
+    <!-- 添加气泡菜单 -->
+    <div class="popup-menu" id="screenshotMenu">
+      <button id="fullPage">整页截图</button>
+      <button id="visibleArea">可视区域截图</button>
+      <button id="selectArea">选择区域截图</button>
     </div>
   </div>
   <script src="popup.js"></script>

@@ -8,7 +8,7 @@
     "service_worker": "service_worker.js"
   },
   "web_accessible_resources": [{
-    "resources": ["changeColor.js"],
+    "resources": ["changeColor.js","Screenshot.js"],
     "matches": ["<all_urls>"]
   }],
   "permissions": ["storage", "activeTab", "scripting"],
