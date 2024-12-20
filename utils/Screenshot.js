@@ -88,7 +88,6 @@ export async function Screenshotinit() {
         },
         function (res) {
           console.log("选择区域截图: ", res);
-          alert("选择区域截图已完成！");
         }
       );
     });
