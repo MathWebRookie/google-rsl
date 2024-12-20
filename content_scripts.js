@@ -24,6 +24,7 @@ chrome.runtime.onMessage.addListener((req, sender, res) => {
     exportFormatSelectvalue = req.exportFormatSelectvalue;
   }
   if (req.type === "area-screenshot") {
+    exportFormatSelectvalue = req.exportFormatSelectvalue;
     // 启动选择区域截图
     area_screenshot();
   }
