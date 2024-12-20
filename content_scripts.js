@@ -14,23 +14,6 @@
 //     return true;
 // })
 
-/**
- * 监听发来的消息
- */
-chrome.runtime.onMessage.addListener((req, sender, res) => {
-  if (req.type === "select-dom") {
-    // 开启选择dom功能
-    isSelectModel = true;
-    exportFormatSelectvalue = req.exportFormatSelectvalue;
-  }
-  if (req.type === "area-screenshot") {
-    exportFormatSelectvalue = req.exportFormatSelectvalue;
-    // 启动选择区域截图
-    area_screenshot();
-  }
-  return true;
-});
-
 // 聚焦 dom 的遮罩
 var maskDom = createMask();
 // 是否为选择模式，可以使用鼠标指针选择字段进行编辑,由平台程序改变
@@ -47,6 +30,22 @@ window.globalClickDownTime = null;
 document.addEventListener("mousedown", listenerMousedown);
 document.addEventListener("mouseup", listenerMouseup);
 document.addEventListener("mousemove", listenerMousemove);
+/**
+ * 监听发来的消息
+ */
+chrome.runtime.onMessage.addListener((req, sender, res) => {
+  if (req.type === "select-dom") {
+    // 开启选择dom功能
+    isSelectModel = true;
+    exportFormatSelectvalue = req.exportFormatSelectvalue;
+  }
+  if (req.type === "area-screenshot") {
+    exportFormatSelectvalue = req.exportFormatSelectvalue;
+    // 启动选择区域截图
+    area_screenshot();
+  }
+  return true;
+});
 
 function listenerMousedown(event) {
   if (!isSelectModel) return;
