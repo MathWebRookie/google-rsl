@@ -12,3 +12,10 @@ export function getRandomColor() {
   // 在插件安装时，存储随机生成的颜色
   return [color,color1];
 }
+
+// 触发content页面body颜色函数
+export async function setPageBackgroundColor() {
+  chrome.storage.sync.get("color", ({ color }) => {
+    document.body.style.background = `linear-gradient(135deg, ${color[0]} 0%, ${color[1]} 100%)`;
+  });
+}
