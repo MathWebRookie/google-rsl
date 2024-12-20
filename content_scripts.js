@@ -14,6 +14,22 @@
 //     return true;
 // })
 
+/**
+ * 监听发来的消息
+ */
+chrome.runtime.onMessage.addListener((req, sender, res) => {
+  if (req.type === "select-dom") {
+    // 开启选择dom功能
+    isSelectModel = true;
+    exportFormatSelectvalue = req.exportFormatSelectvalue;
+  }
+  if (req.type === "area-screenshot") {
+    // 启动选择区域截图
+    area_screenshot();
+  }
+  return true;
+});
+
 // 聚焦 dom 的遮罩
 var maskDom = createMask();
 // 是否为选择模式，可以使用鼠标指针选择字段进行编辑,由平台程序改变
@@ -127,8 +143,8 @@ async function listenerMouseup(event) {
       console.log("crop_image", crop_image);
       // 复制进粘贴板
       exportFormatSelectvalue === "base64"
-          ? navigator.clipboard.writeText(crop_image)
-          : copy_img_to_clipboard(crop_image);
+        ? navigator.clipboard.writeText(crop_image)
+        : copy_img_to_clipboard(crop_image);
 
       // 关闭 选择模式
       isSelectModel = false;
@@ -181,14 +197,95 @@ function createMask() {
   return mask;
 }
 
-/**
- * 监听发来的消息
- */
-chrome.runtime.onMessage.addListener((req, sender, res) => {
-  if (req.type === "select-dom") {
-    // 开启选择dom功能
-    isSelectModel = true;
-    exportFormatSelectvalue = req.exportFormatSelectvalue
+//选择区域
+async function area_screenshot() {
+  async function copy_img_to_clipboard(image) {
+    const storage_data = await chrome.storage.sync.get(["model"]);
+    const model = storage_data.model || "file";
+    // 复制都用户粘贴板中
+    if (model === "base64") {
+      navigator.clipboard.writeText(image);
+    } else if (model === "file") {
+      const [header, base64] = image.split(",");
+      const [_, type] = /data:(.*);base64/.exec(header);
+      const binary = atob(base64);
+      const array = Array.from({ length: binary.length }).map((_, index) =>
+        binary.charCodeAt(index)
+      );
+      navigator.clipboard.write([
+        new ClipboardItem({
+          // 这里只能写入 png
+          "image/png": new Blob([new Uint8Array(array)], { type: "image/png" }),
+        }),
+      ]);
+    }
   }
-  return true;
-});
+  function crop(image, opts) {
+    return new Promise((resolve, reject) => {
+      const x = opts.x,
+        y = opts.y;
+      const w = opts.w,
+        h = opts.h;
+      const format = opts.format || "png";
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      document.body.append(canvas);
+
+      const img = new Image();
+      img.onload = () => {
+        const context = canvas.getContext("2d");
+        context.drawImage(img, x, y, w, h, 0, 0, w, h);
+        const cropped = canvas.toDataURL(`image/${format}`);
+        canvas.remove();
+        resolve(cropped);
+      };
+      img.src = image;
+    });
+  }
+  // 返回整个屏幕截图
+  const screen_image = await chrome.runtime.sendMessage({ type: "screenshot" });
+  if (!screen_image.image) {
+    alert(chrome.i18n.getMessage("errorMsg"));
+    return;
+  }
+  const image_container = document.createElement("div");
+  image_container.style.width = "100vw";
+  image_container.style.height = "100vh";
+  image_container.style.position = "fixed";
+  image_container.style.left = "0px";
+  image_container.style.top = "0px";
+  image_container.style.zIndex = 9999999999999;
+  document.body.append(image_container);
+  const image_dom = document.createElement("img");
+  image_dom.src = screen_image.image;
+  image_dom.style.maxWidth = "100%";
+  image_container.append(image_dom);
+
+  const infos = {};
+  const destroy_ins = new Cropper(image_dom, {
+    autoCrop: true,
+    autoCropArea: 0.001,
+    zoomOnTouch: false,
+    zoomOnWheel: false,
+    movable: false,
+    rotatable: false,
+    zoomable: false,
+    crop(event) {
+      (infos.x = event.detail.x),
+        (infos.y = event.detail.y),
+        (infos.w = event.detail.width),
+        (infos.h = event.detail.height);
+    },
+    async cropend() {
+      const crop_image = await crop(screen_image.image, infos);
+      // 复制进粘贴板
+      exportFormatSelectvalue === "base64"
+        ? navigator.clipboard.writeText(crop_image)
+        : copy_img_to_clipboard(crop_image);
+      // 别忘记注销掉刚刚我们产生的对象
+      destroy_ins.destroy();
+      image_container.remove();
+    },
+  });
+}

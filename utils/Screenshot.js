@@ -48,7 +48,10 @@ export async function Screenshotinit() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(
         tabs[0].id,
-        { type: "select-dom" ,exportFormatSelectvalue: exportFormatSelect.value},
+        {
+          type: "select-dom",
+          exportFormatSelectvalue: exportFormatSelect.value,
+        },
         function (res) {
           console.log("选择的 dom 信息: ", res);
         }
@@ -73,5 +76,17 @@ export async function Screenshotinit() {
   document.getElementById("selectArea").addEventListener("click", () => {
     // 实现选择区域截图逻辑
     console.log("选择区域截图");
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        {
+          type: "area-screenshot",
+          exportFormatSelectvalue: exportFormatSelect.value,
+        },
+        function (res) {
+          console.log("选择区域截图: ", res);
+        }
+      );
+    });
   });
 }

@@ -9,7 +9,8 @@
   },
   "content_scripts": [
     {
-      "js": ["content_scripts.js"],
+      "css": ["./libs/cropper.min.css"],
+      "js": ["content_scripts.js", "./libs/cropper.min.js"],
       "matches": ["<all_urls>"]
     }
   ],
