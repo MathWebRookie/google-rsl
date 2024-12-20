@@ -21,16 +21,24 @@ export async function Screenshotinit() {
     screenshotMenu.style.left = `${btnRect.left}px`;
   });
   // 处理各种截图选项
-  document.getElementById("fullPage").addEventListener("click", (e) => {
-    // e.stopPropagation();
+  document.getElementById("domPage").addEventListener("click", () => {
     // 实现整页截图逻辑
-    console.log("整页截图", imageFormatSelect.value, exportFormatSelect.value);
+    console.log("dom截图");
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { type: "select-dom" },
+        function (res) {
+          console.log("选择的 dom 信息: ", res);
+        }
+      );
+    });
   });
 
   document.getElementById("visibleArea").addEventListener("click", () => {
     // 实现可视区域截图逻辑
     chrome.tabs.captureVisibleTab(
-      tab.windowId,
+      //   tab.windowId,
       { format: "png", quality: 100 },
       (image) => {
         // 会返回 base64 图片

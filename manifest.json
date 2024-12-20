@@ -7,10 +7,18 @@
   "background": {
     "service_worker": "service_worker.js"
   },
-  "web_accessible_resources": [{
-    "resources": ["changeColor.js","Screenshot.js"],
-    "matches": ["<all_urls>"]
-  }],
+  "content_scripts": [
+    {
+      "js": ["content_scripts.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["changeColor.js", "Screenshot.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "permissions": ["storage", "activeTab", "scripting"],
   "action": {
     "default_popup": "rslpopup.html",
