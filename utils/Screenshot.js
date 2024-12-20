@@ -72,8 +72,6 @@ export async function Screenshotinit() {
       }
     );
     console.log("可视区域截图");
-    alert("可视区域截图已完成！");
-
   });
 
   document.getElementById("selectArea").addEventListener("click", () => {
