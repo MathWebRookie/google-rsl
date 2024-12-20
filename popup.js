@@ -17,3 +17,15 @@ changeColor.addEventListener("click", async () => {
   });
   // 在当前激活的tab页面中执行setPageBackgroundColor这样一个函数
 });
+
+// 截图
+const Screenshot = document.getElementById("Screenshot");
+Screenshot.addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  console.log('截图了！');
+  // chrome.storage.sync.set({ color: (await importcolor()).getRandomColor() });
+  // chrome.scripting.executeScript({
+  //   target: { tabId: tab.id },
+  //   func: (await importcolor()).setPageBackgroundColor,
+  // });
+});
