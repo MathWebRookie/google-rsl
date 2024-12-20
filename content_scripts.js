@@ -20,6 +20,7 @@ var maskDom = createMask();
 var isSelectModel = false;
 // 鼠标是否按下状态
 var isMousedown = false;
+var exportFormatSelectvalue;
 var target = null;
 // 为防止页面上面有禁止冒泡的元素。所以使用 mouse 实现点击监听
 window.globalClickMouseDowned = null;
@@ -125,7 +126,9 @@ async function listenerMouseup(event) {
       const crop_image = await crop(screen_image.image, infos);
       console.log("crop_image", crop_image);
       // 复制进粘贴板
-      copy_img_to_clipboard(crop_image);
+      exportFormatSelectvalue === "base64"
+          ? navigator.clipboard.writeText(crop_image)
+          : copy_img_to_clipboard(crop_image);
 
       // 关闭 选择模式
       isSelectModel = false;
@@ -185,6 +188,7 @@ chrome.runtime.onMessage.addListener((req, sender, res) => {
   if (req.type === "select-dom") {
     // 开启选择dom功能
     isSelectModel = true;
+    exportFormatSelectvalue = req.exportFormatSelectvalue
   }
   return true;
 });

@@ -1,5 +1,26 @@
 // 截图init函数
 export async function Screenshotinit() {
+  async function copy_img_to_clipboard(image) {
+    const storage_data = await chrome.storage.sync.get(["model"]);
+    const model = storage_data.model || "file";
+    // 复制都用户粘贴板中
+    if (model === "base64") {
+      navigator.clipboard.writeText(image);
+    } else if (model === "file") {
+      const [header, base64] = image.split(",");
+      const [_, type] = /data:(.*);base64/.exec(header);
+      const binary = atob(base64);
+      const array = Array.from({ length: binary.length }).map((_, index) =>
+        binary.charCodeAt(index)
+      );
+      navigator.clipboard.write([
+        new ClipboardItem({
+          // 这里只能写入 png
+          "image/png": new Blob([new Uint8Array(array)], { type: "image/png" }),
+        }),
+      ]);
+    }
+  }
   const Screenshot = document.getElementById("Screenshot");
   const screenshotMenu = document.getElementById("screenshotMenu");
   const imageFormatSelect = document.getElementById("imageFormat");
@@ -27,7 +48,7 @@ export async function Screenshotinit() {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(
         tabs[0].id,
-        { type: "select-dom" },
+        { type: "select-dom" ,exportFormatSelectvalue: exportFormatSelect.value},
         function (res) {
           console.log("选择的 dom 信息: ", res);
         }
@@ -41,8 +62,9 @@ export async function Screenshotinit() {
       //   tab.windowId,
       { format: "png", quality: 100 },
       (image) => {
-        // 会返回 base64 图片
-        console.log("image:", image);
+        exportFormatSelect.value === "base64"
+          ? navigator.clipboard.writeText(image)
+          : copy_img_to_clipboard(image);
       }
     );
     console.log("可视区域截图");
