@@ -1,11 +1,16 @@
 {
-  "name": "Hello Extensions",
-  "description": "Base Level Extension",
+  "name": "rsl-tools",
+  "description": "",
+  "author": "15555169279@163.com",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "service_worker.js"
   },
+  "web_accessible_resources": [{
+    "resources": ["changeColor.js"],
+    "matches": ["<all_urls>"]
+  }],
   "permissions": ["storage", "activeTab", "scripting"],
   "action": {
     "default_popup": "rslpopup.html",

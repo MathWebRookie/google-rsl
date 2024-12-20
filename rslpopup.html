@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>RSL Extension</title>
@@ -27,7 +28,7 @@
     h1 {
       font-size: 24px;
       margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .welcome-text {
@@ -45,12 +46,12 @@
       cursor: pointer;
       font-weight: bold;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
     }
 
     @keyframes fadeIn {
@@ -58,6 +59,7 @@
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -71,12 +73,17 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Welcome to RSL的世界</h1>
     <p class="welcome-text">这是我的第一个谷歌插件</p>
-    <button class="button" id="changeColor">探索</button>
+    <div>
+      <button class="button" id="changeColor">更改背景色</button>
+      <button class="button" id="Screenshot">截图</button>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
+
 </html>
