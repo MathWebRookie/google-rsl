@@ -54,7 +54,6 @@ export async function Screenshotinit() {
         },
         function (res) {
           console.log("选择的 dom 信息: ", res);
-          alert("dom截图已完成！");
         }
       );
     });
