@@ -54,6 +54,7 @@ export async function Screenshotinit() {
         },
         function (res) {
           console.log("选择的 dom 信息: ", res);
+          alert("dom截图已完成！");
         }
       );
     });
@@ -71,6 +72,8 @@ export async function Screenshotinit() {
       }
     );
     console.log("可视区域截图");
+    alert("可视区域截图已完成！");
+
   });
 
   document.getElementById("selectArea").addEventListener("click", () => {
@@ -85,6 +88,7 @@ export async function Screenshotinit() {
         },
         function (res) {
           console.log("选择区域截图: ", res);
+          alert("选择区域截图已完成！");
         }
       );
     });
